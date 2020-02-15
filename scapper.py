@@ -5,7 +5,7 @@ weather_url=""
 
 # function to get data save in specified format
 def get_data():
-    bike_data= request.get(bikes_url)
+    bike_data= requests.get(bikes_url)
     file_type= bike_data.json()
     print(file_type)
 
