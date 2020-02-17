@@ -13,17 +13,16 @@ def scrapdata():
                                    passwd="rootadmin", database= "biketest")
     cursor = db.cursor()
 
-    cursor.execute("TRUNCATE TABLE biketest;")
+    #cursor.execute("TRUNCATE TABLE biketest;")
 
     db.commit()
         # fetches data every 1 minute interval
 
-    transaction_sql = (
-        "insert into biketest"
-        "(STATION_NUM, COUNTY, SN, ADDRESS)"
-        "values (%(number)s, (%(contract_name)s), %(name)s, %(address)s)")
+    query = (
+        "INSERT INTO biketest(STATION_NUM, COUNTY, SN, ADDRESS) " \
+        "VALUES (%(number)s, (%(contract_name)s), %(name)s, %(address)s)")
     for data in json_data:
-        cursor.execute(transaction_sql, data)
+        cursor.execute(query, data)
 
     # threading.Timer(60.0, scrapdata).start()
     #
