@@ -7,7 +7,7 @@ weather_url=""
 
 # function to get data save in specified format
 def get_data():
-    threading.Timer(5.0,get_data).start()
+    threading.Timer(5.0*60,get_data).start()
     bike_data= requests.get(bikes_url)
     file_type= bike_data.json()
     print(file_type)
