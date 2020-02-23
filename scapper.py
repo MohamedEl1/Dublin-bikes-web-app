@@ -36,9 +36,9 @@ except requests.exceptions.RequestException as e:
 
 # create the table in my mysql
 # sql_cursor = database.cursor()
-
+#
 # sql_cursor.execute("CREATE TABLE Bikes(number VARCHAR(255),contract_name VARCHAR(255), name VARCHAR(255), bike_stands VARCHAR(255), available_bike_stands VARCHAR(255),available_bikes VARCHAR(255), status VARCHAR(255), last_update VARCHAR(255))")
-# sql_cursor.execute("CREATE TABLE Weather (coord_lon VARCHAR(255), coord_lat VARCHAR(255), weather_id VARCHAR(255), weather_main VARCHAR(255), weather_description VARCHAR(255),weather_icon VARCHAR(255), weather_base VARCHAR(255) , feels_like VARCHAR(255),"\
+# sql_cursor.execute("CREATE TABLE Weather (coord_lon VARCHAR(255), coord_lat VARCHAR(255), weather_id VARCHAR(255), weather_main VARCHAR(255), weather_description VARCHAR(255),weather_icon VARCHAR(255), weather_base VARCHAR(255) ,main_temp VARCHAR(255),feels_like VARCHAR(255),"\
 #                     "main_temp_min VARCHAR(255), main_temp_max VARCHAR(255), main_pressure VARCHAR(255), main_humidity VARCHAR(255), main_visibility VARCHAR(255)," \
 #                     "wind_speed VARCHAR(255), wind_deg VARCHAR(255),  clouds_all VARCHAR(255), dt VARCHAR(255), sys_type VARCHAR(255), sys_id VARCHAR(255), sys_country VARCHAR(255),sys_sunrise VARCHAR(255), sys_sunset VARCHAR(255), city_id VARCHAR(255), city_name VARCHAR(255), cod VARCHAR(255))")
 
@@ -48,10 +48,10 @@ bike_table = "INSERT INTO Bikes(number,contract_name, name, bike_stands, availab
              "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
 
 weather_table = "INSERT INTO Weather (coord_lon,coord_lat,weather_id,weather_main,weather_description, " \
-                "weather_icon, weather_base , feels_like , main_temp_min, main_temp_max, main_pressure, main_humidity, main_visibility, " \
+                "weather_icon, weather_base , main_temp, feels_like , main_temp_min, main_temp_max, main_pressure, main_humidity, main_visibility, " \
                 "wind_speed, wind_deg, clouds_all, dt, sys_type, sys_id, sys_country, " \
                 "sys_sunrise, sys_sunset,city_id,city_name,cod) " \
-                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s)"
 
 try:
     sql_cursor = database.cursor()
