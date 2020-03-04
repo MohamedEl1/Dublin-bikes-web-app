@@ -34,7 +34,7 @@ except requests.exceptions.RequestException as e:
     print(e)
     sys.exit(1)
 
-#create the table in my mysql
+# create the table in my mysql
 sql_cursor = database.cursor()
 
 # sql_cursor.execute("CREATE TABLE Bike(number VARCHAR(255),contract_name VARCHAR(255), name VARCHAR(255), bike_stands VARCHAR(255), available_bike_stands VARCHAR(255),available_bikes VARCHAR(255), status VARCHAR(255), last_update VARCHAR(255))")
@@ -69,12 +69,10 @@ try:
                    weather_response['weather'][0]['icon'],
                    weather_response['base'], weather_response['main']['temp'], weather_response['main']['feels_like'],
                    weather_response['main']['temp_min'], weather_response['main']['temp_max'], weather_response['main']['pressure'],
-                   weather_response['main']['humidity'],weather_response['visibility'], weather_response['wind']['speed'],
-                   weather_response['clouds']['all'],time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(weather_response['dt'])), weather_response['sys']['type'],
+                   weather_response['main']['humidity'], weather_response['visibility'], weather_response['wind']['speed'],
+                   weather_response['clouds']['all'], time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(weather_response['dt'])), weather_response['sys']['type'],
                    weather_response['sys']['id'], weather_response['sys']['country'], time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(weather_response['sys']['sunrise'])),
-                   time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(weather_response['sys']['sunset'])),weather_response['id'], weather_response['name'], weather_response['cod'])
-
-
+                   time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(weather_response['sys']['sunset'])), weather_response['id'], weather_response['name'], weather_response['cod'])
 
     sql_cursor.execute(weather_table, Weather_data)
 
