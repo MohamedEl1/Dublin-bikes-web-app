@@ -1,0 +1,185 @@
+<html>
+    <head>
+        <title>Simple Map</title>
+        <meta name="viewport" content="initial-scale=1.0">
+        <meta charset="utf-8">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+        <script type="text/javascript"
+      src='https://www.gstatic.com/charts/loader.js'></script>
+      <!-- This is to get the _.ForEach working in the javaScript file -->
+      <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+          <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+        <style>
+            /* Always set the map height explicity to define the size of the div
+            * element that contains the map. */
+        
+        #map {
+            height: 100%;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <div id="display" class="polaroid">
+            <!-- <img id="image" src="../static/bikes.jpg" alt="BikeLane"> -->
+            <p id="availability"></p>
+   </div>
+   <script>
+    var map;
+    function initMap() {
+  var myLatLng = {lat: 53.2734, lng: -7.77832031};
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 4,
+    center: myLatLng
+    
+  });
+
+  var marker = new google.maps.Marker({
+    position: myLatLng,
+    map: map,
+    title: 'Hello World!'
+  });
+    var infoWindow = new google.maps.InfoWindow();
+
+  var jqxhr = $.getJSON("http://127.0.0.1:5000/stations", null, function(data) {
+            var stations = data.station;
+            //console.log('station', stations)
+      // draw markers
+      _.forEach(stations,function(station){
+          var marker = new google.maps.Marker({ // this adds a marker based on latitude and longitute position below:
+              position : {
+                  lat : station.position_lat,
+                  lng : station.position_lng
+              },
+              map: map,
+              title: station.name, // this is the stations name
+              station_number: station.number // this is the stations number
+          });
+          marker.metadata = {type: "point", id: station.station_number};
+                google.maps.event.addListener(marker, 'click', (function(marker, stations) {
+                     return function() {
+                         if (station.banking == 0) {
+                             station.banking = "No";
+                         } else {
+                             station.banking = "Yes";
+                         }
+					 	var number = station.number;
+                     	var content = "Station name: " + station.name + "<br>" + "Station number: " + station.number + "<br>" + "Address: " + station.address + "<br>" + "Banking: " + station.banking + "<br>" + "Available Bike Stands: " + station.bike_stands + "<br>";
+                         var button = "<button onclick='showDiv(); getOccupancy(" + number + ")'>Click here for more detailed information!</button>";
+                         infoWindow.setContent(content + "<br> " + button);
+                         infoWindow.open(map, marker);
+                     }
+                })(marker, stations));
+            })
+        })
+        .fail(function() {
+            console.log("error");
+        })
+  }
+
+function showDiv(){
+    div = document.getElementById("display");
+    div.style.display = "inline-block";
+}
+       
+//// Gets occupancy information for a given station
+//function getOccupancy(station_number) {
+//    document.getElementById("availability").style.display = "inline-block";
+//    var jqxhr = $.getJSON("http://127.0.0.1:5000/occupancy/" + station_number, function(data){
+//        var station_details = data.bikes_available;
+//        _.forEach(station_details, function(bikes_available){
+//            var content = "<b><u>Station:</u></b> <br><br> Address: "  + "<br><br>" + "<b><u>Currently there are: </u></b><br><br> Bikes available: " + bikes_available.available_bikes +"<br>" + "Bike stands available: " + bikes_available.available_bike_stands + "<br>";
+//            document.getElementById("availability").innerHTML = content;
+//        })
+//    });
+//}
+
+//google.charts.load("current", {packages:['corechart']});
+//    google.charts.setOnLoadCallback(getOccupancy(station_number));
+//function getOccupancy(station_number) {
+//    
+//
+//    document.getElementById("availability").style.display = "inline-block";
+//    var infoWindow = new google.maps.InfoWindow();
+//
+//    var jqxhr = $.getJSON("http://127.0.0.1:5000/occupancy/" + station_number, function(data){
+//         data = JSON.parse(data.data)                 
+//        console.log('data', data);
+//        
+//        var node = document.getElementById('div'),
+//        chart = new google.visualization.ColumnChart(node);
+//        
+//        var chart_data = new google.visualization.DataTable();
+//        chart_data.addColumn('datetime', 'Time of Day')
+//        chart_data.addColumn('number', '#')
+//        _.forEach(data,function(row) {
+//            chart_data.addRow([new Date(row[0]), row[1]]);
+//        })
+//        
+//        chart.draw(chart_data, options);
+//        infoWindow.setContent(node);
+//        infoWindow.open(marker.getMap(), marker);
+//        
+//    
+//}).fail(function() {
+//        console.log("error");
+//    })
+//       }
+    
+        
+    
+//        })
+//  })
+  
+       
+//  })
+//}
+</script>
+        <!-- </script> -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKIG0tau-Kvkyv3pX_H4sErJqzbe07KUU&callback=initMap"
+        async defer>
+    
+
+
+// showStationMarkers();
+
+//Functions to show/hide data - the occupancy info etc.
+
+// showDiv();
+//     var jqxhr = $.getJSON("/stations", function(data) {
+//         console.log("second success");
+//     })
+//     .done(function() {
+//         console.log("Second success");
+//     })
+//     .fail(function(){
+//         console.log("error");
+//     })
+//     .always(function() {
+//         console.log("complete");
+//     });
+    
+// function showStationMarkers() {
+//     var jqxhr = $.getJSON($SCRIPT_ROOT + "/stations", function(data) {
+//         var stations = data.stations;
+//         console.log('stations', stations)
+//         //draw markers
+//     })
+//     .fail(function() {
+//         console.log("error")
+//     })
+// }
+
+    </script>
+
+        
+    </body>
+</html>

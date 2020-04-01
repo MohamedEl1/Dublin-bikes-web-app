@@ -1,7 +1,11 @@
 import sqlalchemy
 from flask import Flask, g, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+import pandas as pd
+import json
 import pymysql
+from pandas._libs import json
 
 dbhost = 'bikesdata.cnqobaauuxez.us-east-1.rds.amazonaws.com' #host name
 dbuser = 'admin' #mysql username
@@ -19,6 +23,7 @@ engine = sqlalchemy.create_engine('mysql+pymysql://'+dbuser+':'+dbpass+'@'+dbhos
 """
 
 app = Flask(__name__)
+CORS(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['SQLALCHEMY_DATABASE_URI']=DB_URI
@@ -43,7 +48,8 @@ def get_db():
 
 
 # below retrieves all information the table station in the database and displays it as a json format
-@app.route("/station")
+@app.route("/stations")
+# @functools.lru_cache(maxsize=128)
 def get_stations():
     engine = get_db()
     station = []
@@ -65,8 +71,16 @@ def get_bikes_available():
 
     return jsonify(bikes_available = data)
 
+@app.route("/occupancy/<int:station_id>")
+def get_occupancy(station_id):
+    engine = get_db()
+    df = pd.read_sql_query("select * from bikes_available where number=%(number)s", engine, params={"number":station_id})
+    df['last_update'] = pd.to_datetime(df.last_update)
+    df.set_index('last_update', inplace=True)
+    res = df['available_bike_stands'].resample('1d').mean()
 
-
+    print(res)
+    return jsonify(data=json.dumps(list(zip(map(lambda x: x.isoformat(), res.index), res.values))))
 # below creates a table in the database to test the connection
 
 # class User(db.Model):
