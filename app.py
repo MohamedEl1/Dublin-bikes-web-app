@@ -74,26 +74,15 @@ def get_bikes_available():
 @app.route("/occupancy/<int:station_id>")
 def get_occupancy(station_id):
     engine = get_db()
-    df = pd.read_sql_query("select * from bikes_available where number=%(number)s", engine, params={"number":station_id})
-    df['last_update'] = pd.to_datetime(df.last_update)
-    df.set_index('last_update', inplace=True)
-    res = df['available_bike_stands'].resample('1d').mean()
+    data = []
+    rows= engine.execute("SELECT * From bikes_available where number={} order by last_update desc limit 1;".format(station_id))
+    for row in rows:
+        data.append(dict(row))
 
-    print(res)
-    return jsonify(data=json.dumps(list(zip(map(lambda x: x.isoformat(), res.index), res.values))))
-# below creates a table in the database to test the connection
+    return jsonify(bikes_available=data)
 
-# class User(db.Model):
-#     id = db.Column(db.Integer, primary_key = True)
-#     username = db.Column(db.String(80), unique = True)
-#     email = db.Column(db.String(80), unique=True)
-#
-#     def __init__(self, username, email):
-#         self.username = username
-#         self.email = email
-#
-#
-# db.create_all()
+
+    return jsonify(bikes_available=rows)
 
 
 
