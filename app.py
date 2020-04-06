@@ -75,7 +75,7 @@ def get_bikes_available():
 def get_occupancy(station_id):
     engine = get_db()
     data = []
-    rows= engine.execute("SELECT * From bikes_available where number={} order by last_update desc limit 1;".format(station_id))
+    rows= engine.execute("SELECT * From Bike where number={} order by last_update desc limit 1;".format(station_id))
     for row in rows:
         data.append(dict(row))
 
