@@ -1,186 +1,431 @@
 <html>
-    <head>
-        <title>Simple Map</title>
-        <meta name="viewport" content="initial-scale=1.0">
-        <meta charset="utf-8">
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script type="text/javascript"
-      src='https://www.gstatic.com/charts/loader.js'></script>
-      <!-- This is to get the _.ForEach working in the javaScript file -->
-      <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-          <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-        <style>
-            /* Always set the map height explicity to define the size of the div
+<head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src='https://www.gstatic.com/charts/loader.js'></script>
+    <!-- This is to get the _.ForEach working in the javaScript file -->
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <style>
+        /* Always set the map height explicity to define the size of the div
             * element that contains the map. */
         
         #map {
             height: 100%;
         }
         /* Optional: Makes the sample page fill the window. */
-        html, body {
+        
+        html,
+        body {
             height: 100%;
             margin: 0;
             padding: 0;
         }
-        </style>
-    </head>
-    <body>
-        <div id="map"></div>
-        <div id="display" class="polaroid">
-            <!-- <img id="image" src="../static/bikes.jpg" alt="BikeLane"> -->
-            <p id="availability"></p>
-   </div>
-   <script>
-    
-    function initMap() {
-  var myLatLng = {lat: 53.349562, lng: -6.278198};
+    </style>
+</head>
 
-  var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 14,
-    center: myLatLng
-    
-  });
+<body>
+    <div id="map"></div>
+    <div id="display" class="polaroid">
+        <!-- <img id="image" src="../static/bikes.jpg" alt="BikeLane"> -->
+        <p id="availability"></p>
+    </div>
+    <script>
+        function initMap() {
+            var myLatLng = {
+                lat: 53.349562,
+                lng: -6.278198
+            };
+            var currentPosition = {
+                lat: 53.344245,
+                lng: -6.291248
+            };
 
-  var marker = new google.maps.Marker({
-    position: myLatLng,
-    map: map,
-    title: 'Hello World!'
-  });
-    var infoWindow = new google.maps.InfoWindow();
-    var xy= $.getJSON("")
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 14,
+                center: myLatLng
 
-  var jqxhr = $.getJSON("dublin.json", null, function(data) {
-            var stations =data.station;
-            console.log(stations);  
-      _.forEach(stations,function(station){
-          var marker = new google.maps.Marker({ // this adds a marker based on latitude and longitute position below:
-              position : {
-                  lat : station.position_lat,
-                  lng : station.position_lng
-              },
-              map: map,
-              title: station.name, // this is the stations name
-              station_number: station.number // this is the stations number
-          });
-          marker.metadata = {type: "point", id: station.station_number};
-                google.maps.event.addListener(marker, 'click', (function(marker, stations) {
-                     return function() {
-                         if (station.banking == 0) {
-                             station.banking = "No";
-                         } else {
-                             station.banking = "Yes";
-                         }
-					 	var number = station.number;
-                     	var content = "Station name: " + station.name + "<br>" + "Station number: " + station.number + "<br>" + "Address: " + station.address + "<br>" + "Banking: " + station.banking + "<br>";
-                         var button = "<button onclick=\"getOccupancy(" + number + ")\">More Details...</button>";
-                         infoWindow.setContent(content + "<br> " + button);
-                         infoWindow.open(map, marker);
-                     }
-                })(marker, stations));
+            });
+
+            var marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                title: 'Hello World!'
+            });
+
+            var current = new google.maps.Marker({
+                position: currentPosition,
+                icon: "http://maps.google.com/mapfiles/ms/micons/yellow-dot.png",
+                map: map,
+                title: "You are here!"
+            });
+
+            var infoWindow = new google.maps.InfoWindow();
+            var xy = $.getJSON("")
+
+            var jqxhr = $.getJSON("dublin.json", null, function(data) {
+                    var stations = data.station;
+                    console.log(stations);
+                    _.forEach(stations, function(station) {
+                        var marker = new google.maps.Marker({ // this adds a marker based on latitude and longitute position below:
+                            position: {
+                                lat: station.position_lat,
+                                lng: station.position_lng
+                            },
+                            map: map,
+                            title: station.name, // this is the stations name
+                            station_number: station.number // this is the stations number
+                        });
+                        marker.metadata = {
+                            type: "point",
+                            id: station.station_number
+                        };
+                        google.maps.event.addListener(marker, 'click', (function(marker, stations) {
+                            return function() {
+                                if (station.banking == 0) {
+                                    station.banking = "No";
+                                } else {
+                                    station.banking = "Yes";
+                                }
+                                var number = station.number;
+                                var content = "Station name: " + station.name + "<br>" + "Station number: " + station.number + "<br>" + "Address: " + station.address + "<br>" + "Banking: " + station.banking + "<br>";
+                                var button = "<button onclick=\"getOccupancy(" + number + ")\">More Details...</button>";
+                                infoWindow.setContent(content + "<br> " + button);
+                                infoWindow.open(map, marker);
+                            }
+                        })(marker, stations));
+                    })
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+        }
+
+        function showDiv() {
+            div = document.getElementById("display");
+            div.style.display = "inline-block";
+        }
+
+        // Gets occupancy information for a given station
+        function getOccupancy(station_number) {
+            document.getElementById("availability").style.display = "inline-block";
+            var jqxhr = $.getJSON("http://127.0.0.1:5000/occupancy/" + station_number, function(data) {
+                var station_details = data.bikes_available;
+                _.forEach(station_details, function(bikes_available) {
+                    var content = "<b><u>Currently there are: </u></b><br><br> Bikes available: " + bikes_available.available_bikes + "<br>" + "Bike stands available: " + bikes_available.available_bike_stands + "<br>";
+                    document.getElementById("availability").innerHTML = content;
+                })
+            });
+        }
+
+        //google.charts.load("current", {packages:['corechart']});
+        //    google.charts.setOnLoadCallback(getOccupancy(station_number));
+        //function getOccupancy(station_number) {
+        //    
+        //
+        //    document.getElementById("availability").style.display = "inline-block";
+        //    var infoWindow = new google.maps.InfoWindow();
+        //
+        //    var jqxhr = $.getJSON("http://127.0.0.1:5000/occupancy/" + station_number, function(data){
+        //         data = JSON.parse(data.data)                 
+        //        console.log('data', data);
+        //        
+        //        var node = document.getElementById('div'),
+        //        chart = new google.visualization.ColumnChart(node);
+        //        
+        //        var chart_data = new google.visualization.DataTable();
+        //        chart_data.addColumn('datetime', 'Time of Day')
+        //        chart_data.addColumn('number', '#')
+        //        _.forEach(data,function(row) {
+        //            chart_data.addRow([new Date(row[0]), row[1]]);
+        //        })
+        //        
+        //        chart.draw(chart_data, options);
+        //        infoWindow.setContent(node);
+        //        infoWindow.open(marker.getMap(), marker);
+        //        
+        //    
+        //}).fail(function() {
+        //        console.log("error");
+        //    })
+        //       }
+
+        //        })
+        //  })
+
+        //  })
+        //}
+    </script>
+    <!-- </script> -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKIG0tau-Kvkyv3pX_H4sErJqzbe07KUU&libraries=geometry&callback=initMap" async defer>
+        showStationMarkers();
+
+        //Functions to show/hide data - the occupancy info etc.
+
+        showDiv();
+        var jqxhr = $.getJSON("/stations", function(data) {
+                console.log("second success");
             })
-        })
-        .fail(function() {
-            console.log("error");
-        })
-  }
+            .done(function() {
+                console.log("Second success");
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+            });
 
-function showDiv(){
-    div = document.getElementById("display");
-    div.style.display = "inline-block";
-}
-       
-// Gets occupancy information for a given station
-function getOccupancy(station_number) {
-   document.getElementById("availability").style.display = "inline-block";
-   var jqxhr = $.getJSON("http://127.0.0.1:5000/occupancy/" + station_number, function(data){
-       var station_details = data.bikes_available;
-       _.forEach(station_details, function(bikes_available){
-           var content = "<b><u>Currently there are: </u></b><br><br> Bikes available: " + bikes_available.available_bikes +"<br>" + "Bike stands available: " + bikes_available.available_bike_stands + "<br>";
-           document.getElementById("availability").innerHTML = content;
-       })
-   });
-}
-
-//google.charts.load("current", {packages:['corechart']});
-//    google.charts.setOnLoadCallback(getOccupancy(station_number));
-//function getOccupancy(station_number) {
-//    
-//
-//    document.getElementById("availability").style.display = "inline-block";
-//    var infoWindow = new google.maps.InfoWindow();
-//
-//    var jqxhr = $.getJSON("http://127.0.0.1:5000/occupancy/" + station_number, function(data){
-//         data = JSON.parse(data.data)                 
-//        console.log('data', data);
-//        
-//        var node = document.getElementById('div'),
-//        chart = new google.visualization.ColumnChart(node);
-//        
-//        var chart_data = new google.visualization.DataTable();
-//        chart_data.addColumn('datetime', 'Time of Day')
-//        chart_data.addColumn('number', '#')
-//        _.forEach(data,function(row) {
-//            chart_data.addRow([new Date(row[0]), row[1]]);
-//        })
-//        
-//        chart.draw(chart_data, options);
-//        infoWindow.setContent(node);
-//        infoWindow.open(marker.getMap(), marker);
-//        
-//    
-//}).fail(function() {
-//        console.log("error");
-//    })
-//       }
-    
-        
-    
-//        })
-//  })
-  
-       
-//  })
-//}
-</script>
-        <!-- </script> -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKIG0tau-Kvkyv3pX_H4sErJqzbe07KUU&callback=initMap"
-        async defer>
-    
-
-
-showStationMarkers();
-
-//Functions to show/hide data - the occupancy info etc.
-
-showDiv();
-    var jqxhr = $.getJSON("/stations", function(data) {
-        console.log("second success");
-    })
-    .done(function() {
-        console.log("Second success");
-    })
-    .fail(function(){
-        console.log("error");
-    })
-    .always(function() {
-        console.log("complete");
-    });
-    
-function showStationMarkers() {
-    var jqxhr = $.getJSON($SCRIPT_ROOT + "/stations", function(data) {
-        var stations = data.stations;
-        console.log('stations', stations)
-        //draw markers
-    })
-    .fail(function() {
-        console.log("error")
-    })
-}
-
+        function showStationMarkers() {
+            var jqxhr = $.getJSON($SCRIPT_ROOT + "/stations", function(data) {
+                    var stations = data.stations;
+                    console.log('stations', stations)
+                        //draw markers
+                })
+                .fail(function() {
+                    console.log("error")
+                })
+        }
     </script>
 
-        
-    </body>
+    <script>
+        var stationposition = {}
+        var address = ''
+
+        //populate the dropdown list
+        function populate() {
+            var jqxhr = $.getJSON("dublin.json", null, function(data) {
+                var stations = data.station;
+                var Form = "<option value=2020>Current location</option>";
+                var To = "<option value=2018>Select location</option>";
+                var lat = ''
+
+                for (var i = 0; i < stations.length; i++) {
+                    var address = stations[i].address;
+                    var lng = stations[i].position_lat;
+                    var lat = stations[i].position_lng
+                    To += "<option  value=" + address + ">" + address + "</option>"
+                    stationposition = {
+                        lat: stations[i].position_lat,
+                        lng: stations[i].position_lng
+                    };
+
+                }
+
+                document.getElementById("from_places").innerHTML = Form;
+                document.getElementById("to_places").innerHTML = To;
+
+                console.log(address)
+                console.log(stationposition)
+
+            })
+        };
+        populate()
+
+        var destinationlocation = {}
+        var currentlocation = {
+            lat: 53.344245,
+            lng: -6.291248
+        }
+        var address = ''
+            // get the lng and lat from user input and show route
+        function geolocation() {
+            var origin1 = new google.maps.LatLng(53.344245, -6.291248);
+            var sel = document.getElementById('to_places');
+            var destination = sel.options[sel.selectedIndex].text;
+            var jqxhr = $.getJSON("dublin.json", null, function(data) {
+                var stations = data.station;
+                for (var i = 0; i < stations.length; i++) {
+                    address = stations[i].address;
+
+                    if (destination == stations[i].address) {
+                        destinationlocation = {
+                            lat: stations[i].position_lat,
+                            lng: stations[i].position_lng
+                        };
+
+                        console.log(destinationlocation)
+                    }
+
+                }
+                console.log(currentlocation)
+                calculateDistance()
+                initMap2()
+
+                $(document).ready(function() {
+                    $('#hide').show();
+                })
+
+            })
+        }
+
+        var directionsDisplay;
+        var directionsService;
+        var map;
+
+        function initMap2() {
+            directionsService = new google.maps.DirectionsService;
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 4,
+                center: currentlocation,
+            });
+            directionsDisplay = new google.maps.DirectionsRenderer({
+                map: map
+            });
+            calcRoute();
+        }
+        // calculate route
+        function calcRoute() {
+            var start = currentlocation;
+            var end = destinationlocation;
+            var request = {
+                origin: start,
+                destination: end,
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+            directionsService.route(request, function(result, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(result);
+                }
+            });
+            console.log("end", end)
+        };
+
+        // calculate distance
+        function calculateDistance() {
+            var origin = currentlocation;
+            var destination = destinationlocation;
+            var service = new google.maps.DistanceMatrixService();
+            service.getDistanceMatrix({
+                origins: [origin],
+                destinations: [destination],
+                travelMode: google.maps.TravelMode.BICYCLING,
+                unitSystem: google.maps.UnitSystem.IMPERIAL, // miles and feet.
+                avoidHighways: false,
+                avoidTolls: false
+            }, callback);
+
+            function callback(response, status) {
+                if (status != google.maps.DistanceMatrixStatus.OK) {
+                    $('#result').html(err);
+                } else {
+                    var origin = response.originAddresses[0];
+                    var destination = response.destinationAddresses[0];
+                    if (response.rows[0].elements[0].status === "ZERO_RESULTS") {
+                        $('#result').html("There are no roads between " + origin + " and " + destination);
+                    } else {
+                        var distance = response.rows[0].elements[0].distance;
+                        var duration = response.rows[0].elements[0].duration;
+                        console.log(response.rows[0].elements[0].distance);
+                        var distance_in_kilo = distance.value / 1000; // the kilom
+                        var distance_in_mile = distance.value / 1609.34; // the mile
+                        var duration_text = duration.text;
+                        var duration_value = duration.value;
+                        console.log(duration_text);
+                        $('#miles').text(distance_in_mile.toFixed(2));
+                        $('#kilo').text(distance_in_kilo.toFixed(2));
+                        $('#Duration').text(duration_text);
+
+                    }
+                }
+            }
+
+        }
+
+        $(document).ready(function() {
+            $('#hide').hide();
+        })
+    </script>
+
+    <!--
+    <div class="container">
+        <div class="row">
+            <div class="jumbotron">
+                <h1>Calculate the Distance</h1>
+            </div>
+
+            <div class="col-md-6">
+                <form id="distance_form" onsubmit="return false">
+                    <div class="form-group">
+                        <label>Origin: </label>
+                        <select class="form-control" id="from_places" placeholder="Enter a location"> </select>
+                    </div>
+                    <div class="form-group1">
+                        <label>Destination: </label>
+                        <select class="form-control" id="to_places" placeholder="Enter a location"></select>
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Calculate" onclick='geolocation()' />
+                </form>
+
+                <div id="result">
+                    <ul class="list-group">
+                        <li id="miles">Distance In Mile :</li>
+                        <li id="kilo">Distance is KM:</li>
+                        <li id="Duration">Duration:</li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+-->
+    <div class="col-md-6">
+        <form id="distance_form" onsubmit="return false">
+            <div class="form-group">
+                <table id="geo">
+                    <tr>
+                        <th>Origin</th>
+                        <th>Destination</th>
+                        <th>Travel Mode</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select class="form-control" id="from_places" placeholder="Enter a location"> </select>
+                        </td>
+                        <td>
+                            <select class="form-control" id="to_places" placeholder="Enter a location"></select>
+                        </td>
+                        <td>
+                            <select class="form-control" id="mode" placeholder="Cycling">
+                                <option value="walking">Cycling</option>
+                                <option value="driving">Driving</option>
+                                <option value="walking">Walking</option>
+                                <option value="Bus">Bus</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                </table>
+                <input class="btn btn-primary" type="submit" value="Calculate" onclick='geolocation()'>
+
+            </div>
+
+        </form>
+
+        <div id="result">
+            <table id=hide>
+                <tr>
+                    <td>Miles</td>
+                    <td id="miles"></td>
+                </tr>
+                <tr>
+                    <td>KM</td>
+                    <td id="kilo"></td>
+                </tr>
+
+                <tr>
+                    <td>Duration</td>
+                    <td id="Duration"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</body>
+
 </html>
