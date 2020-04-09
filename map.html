@@ -147,37 +147,6 @@ function getOccupancy(station_number) {
         <!-- </script> -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKIG0tau-Kvkyv3pX_H4sErJqzbe07KUU&callback=initMap"
         async defer>
-    
-
-
-showStationMarkers();
-
-//Functions to show/hide data - the occupancy info etc.
-
-showDiv();
-    var jqxhr = $.getJSON("/stations", function(data) {
-        console.log("second success");
-    })
-    .done(function() {
-        console.log("Second success");
-    })
-    .fail(function(){
-        console.log("error");
-    })
-    .always(function() {
-        console.log("complete");
-    });
-    
-function showStationMarkers() {
-    var jqxhr = $.getJSON($SCRIPT_ROOT + "/stations", function(data) {
-        var stations = data.stations;
-        console.log('stations', stations)
-        //draw markers
-    })
-    .fail(function() {
-        console.log("error")
-    })
-}
 
     </script>
 
