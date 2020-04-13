@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="example.css">
+    <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
@@ -11,6 +11,8 @@
     <!-- This is to get the _.ForEach working in the javaScript file -->
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 
 <body>
@@ -44,6 +46,8 @@
             <div id="map2">
                 <h1>Station<span>Details</span></h1>
                 <p id="availability"></p>
+                <canvas id="myChart"></canvas>
+                <canvas id="myChart2"></canvas>
 
             </div>
             <!--
@@ -257,7 +261,7 @@
                                 }
                                 var number = station.number;
                                 var content = "Station name: " + station.name + "<br>" + "Station number: " + station.number + "<br>" + "Address: " + station.address + "<br>" + "Banking: " + station.banking + "<br>";
-                                var button = "<button onclick=\"getOccupancy(" + number + ")\">More Details...</button>";
+                                var button = "<button onclick=\"getOccupancy(" + number + ");getChartData(" + number + ")\">More Details...</button>";
                                 infoWindow.setContent(content + "<br> " + button);
                                 infoWindow.open(map, marker);
                             }
@@ -280,49 +284,51 @@
             var jqxhr = $.getJSON("http://127.0.0.1:5000/occupancy/" + station_number, function(data) {
                 var station_details = data.bikes_available;
                 _.forEach(station_details, function(bikes_available) {
-                    var content = "<b><u>Currently there are: </u></b><br><br> Bikes available: " + bikes_available.available_bikes + "<br>" + "Bike stands available: " + bikes_available.available_bike_stands + "<br>";
+                    var content = "<h1>" + bikes_available.name + "</h1>"
+                    content += "<b><u>Currently: </u></b><br> Bikes available: " + bikes_available.available_bikes + "<br>" + "Bike stands available: " + bikes_available.available_bike_stands + "<br>";
                     document.getElementById("availability").innerHTML = content;
                 })
             });
         }
 
-        //google.charts.load("current", {packages:['corechart']});
-        //    google.charts.setOnLoadCallback(getOccupancy(station_number));
-        //function getOccupancy(station_number) {
-        //    
-        //
-        //    document.getElementById("availability").style.display = "inline-block";
-        //    var infoWindow = new google.maps.InfoWindow();
-        //
-        //    var jqxhr = $.getJSON("http://127.0.0.1:5000/occupancy/" + station_number, function(data){
-        //         data = JSON.parse(data.data)                 
-        //        console.log('data', data);
-        //        
-        //        var node = document.getElementById('div'),
-        //        chart = new google.visualization.ColumnChart(node);
-        //        
-        //        var chart_data = new google.visualization.DataTable();
-        //        chart_data.addColumn('datetime', 'Time of Day')
-        //        chart_data.addColumn('number', '#')
-        //        _.forEach(data,function(row) {
-        //            chart_data.addRow([new Date(row[0]), row[1]]);
-        //        })
-        //        
-        //        chart.draw(chart_data, options);
-        //        infoWindow.setContent(node);
-        //        infoWindow.open(marker.getMap(), marker);
-        //        
-        //    
-        //}).fail(function() {
-        //        console.log("error");
-        //    })
-        //       }
+        // ploting the chart data 
+        function renderChart(data, labels) {
+            var ctx = document.getElementById("myChart").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Average Hourly Bikes Available',
+                        data: data,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    }]
+                },
+            });
+        }
+        // getting the chart data from the flask
+        function getChartData(station_number) {
+            //    $("#map2").html('<img src="giphy.gif" alt="" srcset="">');
+            $.getJSON("http://127.0.0.1:5000/data/" + station_number, function(result) {
+                $("#loadingMessage").html("");
+                var results = result.bikes_available
+                console.log(results)
+                var x = ""
+                var y = ""
+                for (var i = 0; i < results.length; i++) {
+                    x += results[i].available_bikes + " ";
+                    y += results[i].hour + " ";
 
-        //        })
-        //  })
+                }
+                var data = x.trim().split(" ")
+                var labels = y.trim().split(" ")
 
-        //  })
-        //}
+                renderChart(data, labels)
+            });
+        }
+
+        //getChartData()
     </script>
     <!-- </script> -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKIG0tau-Kvkyv3pX_H4sErJqzbe07KUU&libraries=geometry&callback=initMap" async defer>
