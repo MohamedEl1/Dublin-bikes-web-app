@@ -85,10 +85,10 @@ def get_bikes_available():
 def get_occupancy(station_id):
     engine = get_db()
     data = []
-    rows = engine.execute("SELECT * From Bike where number={} order by last_update desc limit 1;".format(station_id))
+    rows = engine.execute("SELECT * From Bike where number={} order by last_update limit 1;".format(station_id))
     for row in rows:
         data.append(dict(row))
-
+    print(data)
     return jsonify(bikes_available=data)
 
 
@@ -112,29 +112,40 @@ def prediction_model():
     data = data.split()
     main_temp = float(data[0])
     main_pressure = int(data[1])
-    main_humidity =int (data[2])
+    main_humidity = int(data[2])
     wind_speed = float(data[3])
     date = (data[4])
-    d = datetime.datetime.strptime(date,"%Y-%m-%d" )
-    date=d.strftime("%A")
+    d = datetime.datetime.strptime(date, "%Y-%m-%d")
+    date = d.strftime("%A")
     minute = (data[5])
-    station=int(data[6])
+    station = int(data[6])
     d = datetime.datetime.strptime(minute, "%H:%M")
-    hours=int(d.hour)
-    minute=int(d.minute)
+    hours = int(d.hour)
+    minute = int(d.minute)
 
     print("Data to be sent to the prediction model ", data)
     print(type(data))
-    print(date)
-    print(hours)
-    prediction_input = [[station,main_temp, main_pressure, main_humidity, wind_speed, hours, minute]]
-    x=monday.predict(prediction_input)
-    print("Predicted available bikes for selected station is",int(x[0]))
+    prediction_input = [[station, main_temp, main_pressure, main_humidity, wind_speed, hours, minute]]
+    if date == "Monday":
+        x = monday.predict(prediction_input)
+    elif date == "Tuesday":
+        x = tuesday.predict(prediction_input)
+    elif date == "Wednesday":
+        x = wednesday.predict(prediction_input)
+    elif date == "Thurday":
+        x = thursday.predict(prediction_input)
+    elif date == "Friday":
+        x = friday.predict(prediction_input)
+    elif date == "Saturday":
+        x = saturday.predict(prediction_input)
+    elif date == "Sunday":
+        x = sunday.predict(prediction_input)
+
+    print("Predicted available bikes for selected station is", int(x[0]))
 
     # Fetch the ML model output and return as JSON to client
     prediction = [int(x[0])]
     return json.dumps(prediction);
-
 
 
 # Run Server
