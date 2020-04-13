@@ -92,6 +92,23 @@ def get_occupancy(station_id):
     return jsonify(bikes_available=data)
 
 
+@app.route("/data/<int:station_id>")
+def graph(station_id):
+    engine = get_db()
+    data = []
+    rows = engine.execute("SELECT available_bikes, hour( last_update ) as hour FROM  Bike where number={}  group by hour( last_update ) asc;".format(station_id))
+    #rows = engine.execute("SELECT available_bikes, dayname( last_update ) as day,hour( last_update ) as hour From Bike where number={} group by dayname( last_update ),hour( last_update );".format(station_id))
+    for row in rows:
+        data.append(dict(row))
+    print(data)
+    return jsonify(bikes_available=data)
+
+
+
+
+
+
+
 # Load the trained ML pickel file
 monday = pickle.load(open('monday_station.pkl', 'rb'))
 tuesday = pickle.load(open("tuesday_station.pkl", "rb"))
