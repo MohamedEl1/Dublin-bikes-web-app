@@ -1,61 +1,33 @@
-import sqlalchemy
+
 from flask import Flask, g, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
+from flask import  current_app as app
+import sqlalchemy
+from flask import render_template
 import pickle
 import datetime
-
-import pandas as pd
-import json
-import pymysql
 from pandas._libs import json
 
-dbhost = 'bikesdata.cnqobaauuxez.us-east-1.rds.amazonaws.com'  # host name
-dbuser = 'admin'  # mysql username
-dbpass = 'rootadmin'  # mysql password
-dbname = 'dbikes'  # database name
-port = 3306
-DB_URI = 'mysql+pymysql://' + dbuser + ':' + dbpass + '@' + dbhost + '/' + dbname
+app = Flask(__name__,template_folder='templates')
+app.config.from_object('config')
 
-engine = sqlalchemy.create_engine(
-    'mysql+pymysql://' + dbuser + ':' + dbpass + '@' + dbhost + ':' + DB_URI + '/' + dbname)  # connect to server
+print(app.config["SQLALCHEMY_DATABASE_URI"])
 
-"""
- used pymsql, pymysql is pure python port of mysqldb (mysql-python) package. So, pymysql can be installed on any system without needing a C compiler.
-# Installing mysqldb may need a compiler and in windows can produce error(error: Unable to find vcvarsall.bat) if you do not have one
-# pymsql is a database connectors
-"""
-
-app = Flask(__name__)
-CORS(app)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
-
-db = SQLAlchemy(app)
-
-
+# getting the database
 def connect_to_database():
-    engine = sqlalchemy.create_engine(
-        'mysql+pymysql://' + dbuser + ':' + dbpass + '@' + dbhost + '/' + dbname)  # connect to server
+    engine = sqlalchemy.create_engine(app.config["SQLALCHEMY_DATABASE_URI"])  # connect to server
     return engine
-
-
+# to return the database
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = connect_to_database()
     return db
+# index page router to application
+@app.route("/")
+def index():
+    return render_template('index.html')
 
-
-# @app.teardown_appcontext
-# def close_connection(exception):
-#     db = getattr(g, '_database', None)
-#     if db is not None:
-#         db.close()
-
-
-# below retrieves all information the table station in the database and displays it as a json format
+# router to the station services
 @app.route("/stations")
 # @functools.lru_cache(maxsize=128)
 def get_stations():
@@ -67,20 +39,7 @@ def get_stations():
 
     return jsonify(station=station)
 
-
-# below retrieves all information about the table bikes_available in the database and displays it as a json format
-
-@app.route("/bikes_available")
-def get_bikes_available():
-    engine = get_db()
-    data = []
-    rows = engine.execute("SELECT * From bikes_available")
-    for row in rows:
-        data.append(dict(row))
-
-    return jsonify(bikes_available=data)
-
-
+# router to the occupancy status services
 @app.route("/occupancy/<int:station_id>")
 def get_occupancy(station_id):
     engine = get_db()
@@ -91,17 +50,19 @@ def get_occupancy(station_id):
     print(data)
     return jsonify(bikes_available=data)
 
-
+# router to the chart-1 data services
 @app.route("/data/<int:station_id>")
 def graph(station_id):
     engine = get_db()
     data = []
     rows = engine.execute("SELECT available_bikes, hour( last_update ) as hour FROM  Bike where number={}  group by hour( last_update ) asc;".format(station_id))
+    #rows = engine.execute("SELECT available_bikes, dayname( last_update ) as day,hour( last_update ) as hour From Bike where number={} group by dayname( last_update ),hour( last_update );".format(station_id))
     for row in rows:
         data.append(dict(row))
     print(data)
     return jsonify(bikes_available=data)
-#grap 2 data
+
+# router to the chart-2 data services
 @app.route("/data2/<int:station_id>")
 def graph2(station_id):
     engine = get_db()
@@ -112,21 +73,16 @@ def graph2(station_id):
     print(data)
     return jsonify(bikes_available=data)
 
-
-
-
-
 # Load the trained ML pickel file
-monday = pickle.load(open('monday_station.pkl', 'rb'))
-tuesday = pickle.load(open("tuesday_station.pkl", "rb"))
-wednesday = pickle.load(open("wednesday_station.pkl", "rb"))
-thursday = pickle.load(open("thursday_station.pkl", "rb"))
-friday = pickle.load(open("friday_station.pkl", "rb"))
-saturday = pickle.load(open("saturday_station.pkl", "rb"))
-sunday = pickle.load(open("sunday_station.pkl", "rb"))
-import numpy as np
+monday = pickle.load(open('./pickle/monday_station.pkl', 'rb'))
+tuesday = pickle.load(open("./pickle/tuesday_station.pkl", "rb"))
+wednesday = pickle.load(open("./pickle/wednesday_station.pkl", "rb"))
+thursday = pickle.load(open("./pickle/thursday_station.pkl", "rb"))
+friday = pickle.load(open("./pickle/friday_station.pkl", "rb"))
+saturday = pickle.load(open("./pickle/saturday_station.pkl", "rb"))
+sunday = pickle.load(open("./pickle/sunday_station.pkl", "rb"))
 
-
+# router to the prediction service
 @app.route("/prediction", methods=['GET', 'POST'])
 def prediction_model():
     import numpy as np
@@ -156,7 +112,7 @@ def prediction_model():
         x = tuesday.predict(prediction_input)
     elif date == "Wednesday":
         x = wednesday.predict(prediction_input)
-    elif date == "Thursday":
+    elif date == "Thurday":
         x = thursday.predict(prediction_input)
     elif date == "Friday":
         x = friday.predict(prediction_input)
@@ -169,8 +125,7 @@ def prediction_model():
 
     # Fetch the ML model output and return as JSON to client
     prediction = [int(x[0])]
-    return json.dumps(prediction);
-
+    return json.dumps(prediction)
 
 # Run Server
 if __name__ == "__main__":
