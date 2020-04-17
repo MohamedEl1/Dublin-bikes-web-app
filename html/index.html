@@ -38,23 +38,30 @@
             </article>
         </section>
 
-        <div id="content">
+        <section >
 
             <div id="map">
             </div>
 
-            <div id="map2">
+                        <div id="map2">
                 <h1>Station<span>Details</span></h1>
                 <p id="availability"></p>
                 <canvas id="myChart"></canvas>
                 <canvas id="myChart2"></canvas>
-
             </div>
-            <!--
-      <div id="display" class="polaroid">
-        <p id="availability"></p>
-    </div>
--->
+                        
+           <div id="map3">
+                <h1>Station<span>Details</span></h1>
+                <img id="image1" src="dublin-bikes-2.jpg" alt="Show/Hide Image" width="95%"/>
+                <br>
+                <br>
+                <br>
+                <img id="image2" src="bikes.jpg" alt="Show/Hide Image" width="95%"/>
+            </div>    
+        </section>
+
+            <div id="content">
+
             <div class="article column1">
                 <h1>Plan<span>Route</span></h1>
 
@@ -261,7 +268,7 @@
                                 }
                                 var number = station.number;
                                 var content = "Station name: " + station.name + "<br>" + "Station number: " + station.number + "<br>" + "Address: " + station.address + "<br>" + "Banking: " + station.banking + "<br>";
-                                var button = "<button onclick=\"getOccupancy(" + number + ");getChartData(" + number + ")\">More Details...</button>";
+                                var button = "<button id='button1' onclick=\"getOccupancy(" + number + ");getChartData(" + number + ");getChartData2(" + number + ");showdiv()\">More Details...</button>";
                                 infoWindow.setContent(content + "<br> " + button);
                                 infoWindow.open(map, marker);
                             }
@@ -273,6 +280,35 @@
                 })
         }
 
+        
+        
+               
+        
+        
+        
+        
+  // hiding the pictures and displaying the graph      
+ function showdiv() {
+  document.getElementById("map3").style.display = "none";
+  document.getElementById("map2").style.display = "block";
+  
+}       
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         function showDiv() {
             div = document.getElementById("display");
             div.style.display = "inline-block";
@@ -290,6 +326,11 @@
                 })
             });
         }
+        
+        
+    
+        
+        
 
         // ploting the chart data 
         function renderChart(data, labels) {
@@ -312,6 +353,7 @@
             //    $("#map2").html('<img src="giphy.gif" alt="" srcset="">');
             $.getJSON("http://127.0.0.1:5000/data/" + station_number, function(result) {
                 $("#loadingMessage").html("");
+                console.log(results)
                 var results = result.bikes_available
                 console.log(results)
                 var x = ""
@@ -327,6 +369,53 @@
                 renderChart(data, labels)
             });
         }
+        
+        
+        
+ // ploting the chart data 
+        function renderChart2(data, labels) {
+            var ctx = document.getElementById("myChart2").getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Average Daily Bikes Available',
+                        data: data,
+                        borderColor: 'rgba(191, 63, 148)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    }]
+                },
+            });
+        }
+        // getting the chart data from the flask
+        function getChartData2(station_number) {
+            //    $("#map2").html('<img src="giphy.gif" alt="" srcset="">');
+            $.getJSON("http://127.0.0.1:5000/data2/" + station_number, function(result) {
+                $("#loadingMessage").html("");
+                console.log(results)
+                var results = result.bikes_available
+                console.log(results)
+                var x = ""
+                var y = ""
+                for (var i = 0; i < results.length; i++) {
+                    x += results[i].bikes + " ";
+                    y += results[i].day + " ";
+
+                }
+                var data = x.trim().split(" ")
+                var labels = y.trim().split(" ")
+                console.log(labels)
+
+                renderChart2(data, labels)
+            });
+        }       
+        
+        
+        
+        
+        
+         
 
         //getChartData()
     </script>

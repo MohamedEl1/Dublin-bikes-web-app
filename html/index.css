@@ -80,22 +80,22 @@ p {
 
 #map {
     background-color: #efefef;
-    height: 40em;
+    height: 50em;
     margin-bottom: 1em;
-    width: 50em;
+    width: 50%;
     border: 2px solid lightseagreen;
     border-radius: 8px;
-    float: left
+    float: left;
 }
 
-#map2 {
+#map2 , #map3 {
     background-color: #efefef;
-    height: 40em;
+    height: 50em;
     margin-bottom: 1em;
-    width: 48em;
+    width: 48%;
     border: 2px solid lightseagreen;
     border-radius: 8px;
-    float: right
+    float: right;
 }
 
 .article {
@@ -499,3 +499,5 @@ section:after {
 #myModal1 h1 span {
     color: lightseagreen;
 }
+
+#map2{display: none}
