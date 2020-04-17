@@ -97,13 +97,20 @@ def graph(station_id):
     engine = get_db()
     data = []
     rows = engine.execute("SELECT available_bikes, hour( last_update ) as hour FROM  Bike where number={}  group by hour( last_update ) asc;".format(station_id))
-    #rows = engine.execute("SELECT available_bikes, dayname( last_update ) as day,hour( last_update ) as hour From Bike where number={} group by dayname( last_update ),hour( last_update );".format(station_id))
     for row in rows:
         data.append(dict(row))
     print(data)
     return jsonify(bikes_available=data)
-
-
+#grap 2 data
+@app.route("/data2/<int:station_id>")
+def graph2(station_id):
+    engine = get_db()
+    data = []
+    rows= engine.execute("SELECT avg(available_bikes) as bikes, dayname( last_update ) as day FROM Bike where number={} group by dayname( last_update ) asc;".format(station_id))
+    for row in rows:
+        data.append(dict(row))
+    print(data)
+    return jsonify(bikes_available=data)
 
 
 
@@ -149,7 +156,7 @@ def prediction_model():
         x = tuesday.predict(prediction_input)
     elif date == "Wednesday":
         x = wednesday.predict(prediction_input)
-    elif date == "Thurday":
+    elif date == "Thursday":
         x = thursday.predict(prediction_input)
     elif date == "Friday":
         x = friday.predict(prediction_input)
