@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
+    <title>Dublin Bikes|Home</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" src='https://www.gstatic.com/charts/loader.js'></script>
@@ -13,57 +14,78 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-    <div id="wrapper">
-        <div class="navbar">
-            <a class="active" href="#"><i class="fa fa-fw fa-home"></i> Home</a>
-            <a href="#services"><i class="fa fa-fw fa-wrench"></i> Services</a>
-            <a href="#"><i class="fa fa-fw fa-envelope"></i> Contact</a>
-            <a href="#"><i class="fa fa-newspaper-o"></i> News</a>
-            <h3>Dublin<span>Bike</span></h3>
+    <header>
+      <div class="container"> <!-- Reference from https://www.youtube.com/watch?v=Wm6CUkswsNw -->
+        <div id="branding">
+          <h1><span class="highlight">Dublin</span>Bikes</h1>
         </div>
+        <nav>
+          <ul>
+            <li class="current"><a href="/">Home</a></li>
+            <li><a href="#prediction">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+              <li><a href="#news">News</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
 
-        <section>
+        <section id="boxes">
+            <div class="container">
             <div id="weather">
                 <h1>Weather<span>Forecast</span><a class="weatherwidget-io" href="https://forecast7.com/en/53d35n6d26/dublin/" data-label_1="DUBLIN" data-label_2="WEATHER" data-font="Arial Black" data-icons="Climacons Animated" data-theme="metallic" >DUBLIN WEATHER</a></h1>
             </div>
 
-            <article id="message">
-                <h1>Latest <span>News</span></h1>
-                <p><img src="/static/Covid.jpg" alt="Smiley face" width="240" height="250" align="left"></p>
-                <p>The dublinbikes service is continuing to operate as per normal for now. As with other essential public transport service operators we will be guided by advice from the relevant authorities as the situation evolves. When using the service please follow the HSE public health guidelines around hygiene and keeping a safe distance from other users.</p>
-
-            </article>
+            <div id="box" style="overflow-wrap: normal;">
+                <h1 id="news">Latest News</h1>
+                <img src="/static/Covid.jpg" alt="Smiley face">
+                <p >The dublinbikes service is continuing to operate as per normal for now. As with other essential public transport service operators we will be guided by advice from the relevant authorities as the situation evolves. When using the service please follow the HSE public health guidelines around hygiene and keeping a safe distance from other users.</p>
+            </div>
+        </div>
         </section>
-
-        <section >
-
+        <section id="map-chart">
+            <div class="container">
             <div id="map">
             </div>
-
-                        <div id="map2">
-                <h1>Station<span>Details</span></h1>
-                <p id="availability"></p>
-                <canvas id="myChart"></canvas>
-                <canvas id="myChart2"></canvas>
             </div>
-                        
-           <div id="map3">
-                <h1>Station<span>Details</span></h1>
-                <img id="image1" src="/static/dublin-bikes-2.jpg" alt="Show/Hide Image" width="95%"/>
-                <br>
-                <br>
-                <br>
-                <img id="image2" src="/static/bikes.jpg" alt="Show/Hide Image" width="95%"/>
-            </div>    
         </section>
 
-            <div id="content">
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+          
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h3 class="modal-title">Station Details</h3>
+                  <p id="availability"></p>
+                </div>
+                <div class="modal-body">
+                    <canvas id="myChart"></canvas>
+                <canvas id="myChart2"></canvas>                  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+              </div>
+        </div>
+          
 
-            <div class="article column1">
-                <h1>Plan<span>Route</span></h1>
+
+
+<section id="boxes">
+    <div id="container">
+        <div id="content">
+            <div id="box">
+
+            <h1>Plan<span>Route</span></h1>
 
                 <form id="distance_form" onsubmit="return false">
                     <label for="from_places">Origin</label>
@@ -80,34 +102,10 @@
                     </select>
                     <input class="btn btn-primary" id="myBtn" type="submit" value="Calculate">
                 </form>
-
-            </div>
-            <div id="myModal" class="modal">
-
-                <!-- Modal content -->
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <h1>Trip <span>Details</span></h1>
-                    <table>
-                        <tr>
-                            <td>Miles</td>
-                            <td id="miles"></td>
-                        </tr>
-                        <tr>
-                            <td>KM</td>
-                            <td id="kilo"></td>
-                        </tr>
-
-                        <tr>
-                            <td>Duration</td>
-                            <td id="Duration"></td>
-                        </tr>
-                    </table>
                 </div>
-            </div>
 
-            <div class="article column2">
-                <h1>Cycling <span>Safety</span></h1>
+                <div id="box">
+                    <h1>Cycling <span>Safety</span></h1>
                 <p>As a cyclist, you can reduce your risk of death or injury by following some simple advice:</p>
                 <ul>
                     <li>Never cycle in the dark without adequate lighting – white for front, red for rear</li>
@@ -118,22 +116,30 @@
                     <li>Respect other road users – don’t get into shouting matches with motorists; stop at pedestrian crossings; don’t cycle on the footpath</li>
                 </ul>
 
-            </div>
-            <div class="article column3">
-                <h1>Get<span>Prediction</span></h1>
-                <form id="prediction_form" onsubmit="return false">
-                    <label for="from_places">Station</label>
-                    <select class="form-control" id="station_name" onchange="myFunction(this)" value="select"> </select>
-                    <label for="dt">Date</label>
-                    <input type="date" id="dt" value="2000-05-05" />
-                    <label for="time1">Time</label>
-                    <input type="time" id="time1" value="10:00" />
-                    <input class="btn btn-primary" id="myBtn1" type="submit" value="Go">
-                </form>
-            </div>
+                </div>
+                <div id="box">
+                    <div id="prediction">
+                    <h1>Get<span>Prediction</span></h1>
+                    <form id="prediction_form" onsubmit="return false">
+                        <label for="from_places">Station</label>
+                        <select class="form-control" id="station_name" onchange="myFunction(this)" value="select"> </select>
+                        <label for="dt">Date</label>
+                        <input type="date" id="dt" value="2000-05-05" />
+                        <label for="time1">Time</label>
+                        <input type="time" id="time1" value="10:00" />
+                        <input class="btn btn-primary" id="myBtn1" type="submit" value="Go">
+                    </form>
+                    </div>
+
+                </div>
         </div>
 
+    </div>
+    </section>
+
         <footer class="footer-distributed">
+            <div id="contact">
+            <div id="container">
             <div class="footer-left">
 
                 <h3>Dublin<span>Bike</span></h3>
@@ -190,8 +196,34 @@
                 </div>
 
             </div>
+            </div>
+            </div>
         </footer>
-    </div>
+
+
+        <div id="myModal-2" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h1>Trip <span>Details</span></h1>
+                <table>
+                    <tr>
+                        <td>Miles</td>
+                        <td id="miles"></td>
+                    </tr>
+                    <tr>
+                        <td>KM</td>
+                        <td id="kilo"></td>
+                    </tr>
+
+                    <tr>
+                        <td>Duration</td>
+                        <td id="Duration"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     <div id="myModal1" class="modal2">
 
         <!-- Modal content -->
@@ -268,7 +300,7 @@
                                 }
                                 var number = station.number;
                                 var content = "Station name: " + station.name + "<br>" + "Station number: " + station.number + "<br>" + "Address: " + station.address + "<br>" + "Banking: " + station.banking + "<br>";
-                                var button = "<button id='button1' onclick=\"getOccupancy(" + number + ");getChartData(" + number + ");getChartData2(" + number + ");showdiv()\">More Details...</button>";
+                                var button = "<button id='button1' onclick=\"getOccupancy(" + number + ");getChartData(" + number + ");getChartData2(" + number + "); \">More Details...</button>";
                                 infoWindow.setContent(content + "<br> " + button);
                                 infoWindow.open(map, marker);
                             }
@@ -281,41 +313,11 @@
         }
 
         
-        
-               
-        
-        
-        
-        
-  // hiding the pictures and displaying the graph      
- function showdiv() {
-  document.getElementById("map3").style.display = "none";
-  document.getElementById("map2").style.display = "block";
-  
-}       
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        function showDiv() {
-            div = document.getElementById("display");
-            div.style.display = "inline-block";
-        }
+             
 
         // Gets occupancy information for a given station
         function getOccupancy(station_number) {
+            $('#myModal').modal('toggle');
             document.getElementById("availability").style.display = "inline-block";
             var jqxhr = $.getJSON("http://127.0.0.1:5000/occupancy/" + station_number, function(data) {
                 var station_details = data.bikes_available;
@@ -681,7 +683,7 @@
         }
 
         // Get the modal
-        var modal = document.getElementById("myModal");
+        var modal = document.getElementById("myModal-2");
 
         // Get the button that opens the modal
         var btn = document.getElementById("myBtn");
