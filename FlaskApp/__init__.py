@@ -7,14 +7,23 @@ import pickle
 import datetime
 from pandas._libs import json
 
-app = Flask(__name__,template_folder='templates')
-app.config.from_object('config')
 
-print(app.config["SQLALCHEMY_DATABASE_URI"])
+dbhost = 'bikesdata.cnqobaauuxez.us-east-1.rds.amazonaws.com'  # host name
+dbuser = 'admin'  # mysql username
+dbpass = 'rootadmin'  # mysql password
+dbname = 'dbikes'  # database name
+port = 3306
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://' + dbuser + ':' + dbpass + '@' + dbhost + '/' + dbname
+
+
+app = Flask(__name__,template_folder='templates')
+
+
+print(SQLALCHEMY_DATABASE_URI)
 
 # getting the database
 def connect_to_database():
-    engine = sqlalchemy.create_engine(app.config["SQLALCHEMY_DATABASE_URI"])  # connect to server
+    engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI)  # connect to server
     return engine
 # to return the database
 def get_db():
