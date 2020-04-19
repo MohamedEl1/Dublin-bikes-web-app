@@ -83,13 +83,13 @@ def graph2(station_id):
     return jsonify(bikes_available=data)
 
 # Load the trained ML pickel file
-monday = pickle.load(open('./pickle/monday_station.pkl', 'rb'))
-tuesday = pickle.load(open("./pickle/tuesday_station.pkl", "rb"))
-wednesday = pickle.load(open("./pickle/wednesday_station.pkl", "rb"))
-thursday = pickle.load(open("./pickle/thursday_station.pkl", "rb"))
-friday = pickle.load(open("./pickle/friday_station.pkl", "rb"))
-saturday = pickle.load(open("./pickle/saturday_station.pkl", "rb"))
-sunday = pickle.load(open("./pickle/sunday_station.pkl", "rb"))
+monday = pickle.load(open('./static/monday_station.pkl', 'rb'))
+tuesday = pickle.load(open("./static/tuesday_station.pkl", "rb"))
+wednesday = pickle.load(open("./static/wednesday_station.pkl", "rb"))
+thursday = pickle.load(open("./static/thursday_station.pkl", "rb"))
+friday = pickle.load(open("./static/friday_station.pkl", "rb"))
+saturday = pickle.load(open("./static/saturday_station.pkl", "rb"))
+sunday = pickle.load(open("./static/sunday_station.pkl", "rb"))
 
 # router to the prediction service
 @app.route("/prediction", methods=['GET', 'POST'])
