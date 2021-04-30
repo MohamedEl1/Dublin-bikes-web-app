@@ -40,9 +40,11 @@ Project is created with:
 1. Clone or Download the repository (Depending on whether you are using SSH or HTTPS)
 
 ```
-https://github.com/MohamedEl1/Dublin-bikes-web-app.git
+git clone https://github.com/MohamedEl1/Dublin-bikes-web-app.git
 ```
 
 
 
-Pictures:
+## Demo
+
+## Architecture
