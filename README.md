@@ -5,6 +5,20 @@ This is Dublin bikes web application that display the current available dublin b
 
 As part of our Software Engineering module in UCD, we were giving the task to develop a whole scale web application to do with Dublin bikes.
 
+The web application is deployed on AWS EC2, Address of the live website: http://ec2-3-80-156-155.compute-1.amazonaws.com:90/
+
+## What the project does
+
+The popularity of Dublin city Bikes has increased rapidly over the past two decades. As many company
+and multinational company are encouraging employees to avoid CO2 emissions and take alternatives
+people are moving towards healthier commuting to work such as Dublin bikes. <b>The aim of this project is
+to build a Dublin bikes web application that provides all the necessary information to the users of Dublin
+bikes in Ireland.</b>
+
+Furthermore, as there is not a good product in the market to provide this service, we
+decided to step forward to deliver the product the user deserves. Extra features and services that is not
+provided by other websites are predictions of future available bikes, weather etc. 
+
 ## Technologies
 
 Project is created with:
