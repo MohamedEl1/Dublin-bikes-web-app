@@ -6,6 +6,7 @@ This is Dublin bikes web application that display the current available dublin b
 As part of our Software Engineering module in UCD, we were giving the task to develop a whole scale web application to do with Dublin bikes.
 
 The web application is deployed on AWS EC2, Address of the live website: http://ec2-3-80-156-155.compute-1.amazonaws.com:90/
+![image](https://user-images.githubusercontent.com/60153848/116820278-16aa2880-ab6c-11eb-8d22-64711a025532.png)
 
 ## What the project does
 
