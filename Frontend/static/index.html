@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="/static/index.css">
+    <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
@@ -44,7 +44,7 @@
 
             <div id="box" style="overflow-wrap: normal;">
                 <h1 id="news">Latest News</h1>
-                <img src="/static/Covid.jpg" alt="Smiley face">
+                <img src="Covid.jpg" alt="Smiley face">
                 <p >The dublinbikes service is continuing to operate as per normal for now. As with other essential public transport service operators we will be guided by advice from the relevant authorities as the situation evolves. When using the service please follow the HSE public health guidelines around hygiene and keeping a safe distance from other users.</p>
             </div>
         </div>
@@ -274,7 +274,7 @@
             var infoWindow = new google.maps.InfoWindow();
             var xy = $.getJSON("")
 
-            var jqxhr = $.getJSON("/static/dublin.json", null, function(data) {
+            var jqxhr = $.getJSON("/dublin.json", null, function(data) {
                     var stations = data.station;
                     console.log(stations);
                     _.forEach(stations, function(station) {
